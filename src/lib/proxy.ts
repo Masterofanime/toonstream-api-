@@ -1,4 +1,4 @@
-import { serverOrigin } from "..";
+import { SERVER_ORIGIN } from "..";
 import { DirectSource } from "./types";
 
 export function proxifySource(source: DirectSource): DirectSource {
@@ -7,8 +7,8 @@ export function proxifySource(source: DirectSource): DirectSource {
 
     const encodedUrl = encodeURIComponent(url);
 
-    const finalUrl = type == "hls" ? `${serverOrigin}/m3u8-proxy?url=${encodedUrl}${headerQuery}` :
-        `${serverOrigin}/mp4-proxy?url=${encodedUrl}${headerQuery}`
+    const finalUrl = type == "hls" ? `${SERVER_ORIGIN}/m3u8-proxy?url=${encodedUrl}${headerQuery}` :
+        `${SERVER_ORIGIN}/mp4-proxy?url=${encodedUrl}${headerQuery}`
 
     return {
         proxiedUrl: finalUrl,
