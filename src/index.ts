@@ -7,6 +7,7 @@ import { ScrapeHomePage } from "./scrapers/home";
 import { ScrapeMovieInfo, ScrapeMovies, ScrapeMovieSources } from "./scrapers/movie";
 import { ScrapeSearch } from "./scrapers/search";
 import { ScrapeEpisodeSources, ScrapeSeries, ScrapeSeriesInfo } from "./scrapers/series";
+import { moviePlayer, episodePlayer } from "./player"
 
 const HOME_CACHE_TTL = 43_200 // 12hr
 const SEARCH_CACHE_TTL = 43_200 // 12hr
@@ -60,11 +61,13 @@ const app = new Elysia()
         "----------------------",
         "/movies/{page}",
         "/movie/info/{slug}",
-        "/movie/sources/{url}",
+        "/movie/sources/{slug}",
+        "/embad/movie/{slug}",
         "----------------------",
         "/series/{page}",
         "/series/info/{slug}",
         "/episode/sources/{slug}",
+        "/embad/episode/{slug}",
         "----------------------",
         "/m3u8-proxy?url={url}&headers={encodedHeaders}",
         "/ts-segment?url={url}&headers={encodedHeaders}",
@@ -246,6 +249,13 @@ const app = new Elysia()
       };
   })
 
+.get("/embed/movie/:slug", async ({ params }) => {
+
+return moviePlayer(params.slug)
+
+})
+
+
   .get("/series/:page?",
     async ({ params: { page } }) => {
       const then = performance.now();
@@ -338,7 +348,11 @@ const app = new Elysia()
       };
   })
 
+.get("/embed/episode/:slug", async ({ params }) => {
 
+return episodePlayer(params.slug)
+
+})
 
   .get("/m3u8-proxy", async ({ request, query: { url, headers } }) => {
     let corsHeaders: Record<string, string> = {};
